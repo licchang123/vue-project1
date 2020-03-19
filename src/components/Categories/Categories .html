@@ -1,0 +1,48 @@
+<div>
+  <el-button type="primary" plain @click="addCat">添加分类</el-button>
+  <el-table :data="CatData" style="width: 100%">
+    <el-table-tree-column
+      file-icon="icon icon-file"
+      folder-icon="icon icon-folder"
+      prop="cat_name"
+      label="分类名称"
+      width="220"
+      tree-key="cat_id"
+      parent-key="cat_pid"
+      level-key="cat_level"
+      :indent-size="30"
+    ></el-table-tree-column>
+    <el-table-column label="是否有效" width="180">
+      <template slot-scope="scope">
+        {{scope.row.cat_deleted == 'true' ? '否' : '是'}}
+      </template>
+    </el-table-column>
+    <el-table-column prop="cat_level" label="层级">
+      <template slot-scope="scope">
+        <span v-if="scope.row.cat_level == 0">一级</span>
+        <span v-else-if="scope.row.cat_level == 1">二级</span>
+        <span v-else="scope.row.cat.level == 2">三级</span>
+      </template>
+    </el-table-column>
+  </el-table>
+  <!-- 添加表单对话框 -->
+  <el-dialog title="添加分类" :visible.sync="addCatdialogFormVisible">
+    <el-form :model="addCatform" label-width="100px">
+      <el-form-item label="分类名称">
+        <el-input v-model="addCatform.cat_name"></el-input>
+      </el-form-item>
+      <el-form-item label="父级名称">
+        <el-cascader
+          v-model="addCatform.cat_pid_arr"
+          :options="options"
+          clearable
+          :props="defaultProps"
+        ></el-cascader>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="addCatdialogFormVisible = false">取 消</el-button>
+      <el-button type="primary" @click="cliAddCat">确 定</el-button>
+    </div>
+  </el-dialog>
+</div>
